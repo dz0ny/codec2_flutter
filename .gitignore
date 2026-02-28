@@ -1,0 +1,23 @@
+# Dart / Flutter
+.dart_tool/
+.packages
+build/
+*.g.dart
+
+# macOS Xcode
+*.xcworkspace/
+Pods/
+macos/Flutter/GeneratedPluginRegistrant.swift
+
+# iOS Xcode
+ios/Pods/
+ios/Flutter/Debug.xcconfig
+ios/Flutter/Release.xcconfig
+
+# Android
+android/.gradle/
+android/local.properties
+android/key.properties
+
+# OS
+.DS_Store
