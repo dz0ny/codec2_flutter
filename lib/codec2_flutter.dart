@@ -9,8 +9,17 @@ import 'package:ffi/ffi.dart';
 /// Codec2 operating modes.
 /// Numeric values match the C constants in codec2.h.
 enum Codec2Mode {
+  /// 3200 bps.
+  mode3200(0),
+
   /// 2400 bps — higher quality, ~300 bytes/sec output at 8kHz.
   mode2400(1),
+
+  /// 1600 bps.
+  mode1600(2),
+
+  /// 1400 bps.
+  mode1400(3),
 
   /// 1300 bps — good quality for LoRa, ~175 bytes/sec at 8kHz (25 fps × 7 B).
   mode1300(4),
@@ -20,7 +29,7 @@ enum Codec2Mode {
 
   /// 700C bps — minimum bandwidth for very narrow LoRa / ham radio channels.
   /// ~100 bytes/sec output at 8kHz.
-  mode700c(6);
+  mode700c(8);
 
   const Codec2Mode(this.c2ModeId);
 
@@ -28,7 +37,8 @@ enum Codec2Mode {
   final int c2ModeId;
 
   /// Audio frames per second for this mode (all modes use 8000 Hz sample rate).
-  int get framesPerSecond => this == mode2400 ? 50 : 25;
+  int get framesPerSecond =>
+      (this == mode3200 || this == mode2400) ? 50 : 25;
 
   /// Samples per frame (8000 Hz / framesPerSecond).
   int get samplesPerFrame => 8000 ~/ framesPerSecond;
@@ -37,12 +47,18 @@ enum Codec2Mode {
   /// Used to calculate packet duration for the 172-byte BLE frame limit.
   int get bytesPerSecond {
     switch (this) {
+      case mode3200:
+        return 400; // 8 B × 50 fps
       case mode700c:
         return 100; // ceil(28/8)=4 B × 25 fps
       case mode1200:
         return 150; // 6 B × 25 fps
       case mode1300:
         return 175; // ceil(52/8)=7 B × 25 fps
+      case mode1400:
+        return 175; // 7 B × 25 fps
+      case mode1600:
+        return 200; // 8 B × 25 fps
       case mode2400:
         return 300; // 6 B × 50 fps
     }
