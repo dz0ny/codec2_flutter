@@ -10,6 +10,7 @@ project(codec2_flutter VERSION 0.1.0)
 #   git submodule update --init --recursive
 set(CODEC2_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../src/codec2")
 set(CODEC2_SRC  "${CODEC2_ROOT}/src")
+set(CODEC2_GEN  "${CMAKE_CURRENT_SOURCE_DIR}/../src/codec2_generated")
 
 # ── Codec2 core source files ─────────────────────────────────────────────────
 # Only the files required for MODE_700C, MODE_1200, MODE_2400.
@@ -27,8 +28,17 @@ set(CODEC2_SOURCES
     ${CODEC2_SRC}/dump.c
     ${CODEC2_SRC}/mbest.c
     ${CODEC2_SRC}/newamp1.c
+    ${CODEC2_SRC}/codec2_fft.c
     ${CODEC2_SRC}/kiss_fft.c
     ${CODEC2_SRC}/kiss_fftr.c
+    ${CODEC2_GEN}/codebook.c
+    ${CODEC2_GEN}/codebookd.c
+    ${CODEC2_GEN}/codebookge.c
+    ${CODEC2_GEN}/codebookjmv.c
+    ${CODEC2_GEN}/codebooknewamp1.c
+    ${CODEC2_GEN}/codebooknewamp1_energy.c
+    ${CODEC2_GEN}/codebooknewamp2.c
+    ${CODEC2_GEN}/codebooknewamp2_energy.c
 )
 
 add_library(codec2_flutter SHARED
@@ -38,11 +48,11 @@ add_library(codec2_flutter SHARED
 
 target_include_directories(codec2_flutter PRIVATE
     ${CODEC2_SRC}
+    ${CODEC2_GEN}
 )
 
 target_compile_definitions(codec2_flutter PRIVATE
     DUMP=0          # disable debug dump file output
-    CORTEX_M4=0
 )
 
 find_library(log-lib log)
